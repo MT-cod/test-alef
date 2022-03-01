@@ -23,13 +23,13 @@ class Lecture extends Model
         )->withPivot('sequence');
     }
 
-    /*public function isLectureInStudyClasses(int $id): bool
+    public function getLectureData(): array
     {
-        if (empty($this->studyClasses()->where('id', $id)->first())) {
-            return false;
-        }
-        return true;
-    }*/
+        $data['theme'] = $this->theme;
+        $data['description'] = $this->description;
+        $data['studyClasses'] = $this->studyClasses()->with('students')->get()->toArray();
+        return $data;
+    }
 
     public function isLectureAlreadyHasCurrentSequence(int $sequence, int $excludedStudyClassId = 0): bool
     {

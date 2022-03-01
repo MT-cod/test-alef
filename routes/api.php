@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LecturesController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\StudyClassesController;
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ Route::resource(
     StudentsController::class,
     ['only' => ['index', 'show', 'store', 'update', 'destroy']]
 );
+
 Route::resource(
     'study_classes',
     StudyClassesController::class,
@@ -32,3 +34,9 @@ Route::resource(
 );
 Route::get('study_classes/plan/{study_class}', [StudyClassesController::class, 'getPlan']);
 Route::post('study_classes/plan/{study_class}', [StudyClassesController::class, 'setPlan']);
+
+Route::resource(
+    'lectures',
+    LecturesController::class,
+    ['only' => ['index', 'show', 'store', 'update', 'destroy']]
+);

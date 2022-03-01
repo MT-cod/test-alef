@@ -106,7 +106,7 @@ class StudyClassesController extends Controller
             $studyClass->setPlan($request->validated());
             return Response::json(['success' => 'Учебный план успешно утверждён.']);
         } catch (\Throwable $e) {
-            return Response::json(['errors' => 'Не удалось утвердить учебный план.' . $e], 400);
+            return Response::json(['errors' => 'Не удалось утвердить учебный план.'], 400);
         }
     }
 }

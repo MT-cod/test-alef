@@ -1,4 +1,6 @@
 # test-alef
+**Документация к API задания:**<br>
+https://documenter.getpostman.com/view/18230245/UVksLZhn
 ## Тестовое задание:
 Есть студенты, есть классы, и есть лекции.
 
