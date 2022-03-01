@@ -7,7 +7,6 @@ use App\Models\Student;
 use App\Models\StudyClass;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -30,7 +29,6 @@ class DatabaseSeeder extends Seeder
                     if (!$class->isLectureAlreadyInCurrentStudyClass($lecture->id)
                         && !$lecture->isLectureAlreadyInCurrentSequence($sequence)) {
                         $class->lectures()->attach($lecture->id, ['sequence' => $sequence]);
-                        print_r('class--' . $class->id . '-lectid-' . $lecture->id . '-seq-' . $sequence . "\n");
                         break;
                     }
                 }
