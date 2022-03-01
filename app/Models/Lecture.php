@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 
@@ -32,10 +31,11 @@ class Lecture extends Model
         return true;
     }*/
 
-    public function isLectureAlreadyInCurrentSequence(int $sequence): bool
+    public function isLectureAlreadyHasCurrentSequence(int $sequence, int $excludedStudyClassId = 0): bool
     {
         $check = DB::table('study_classes_lectures')
             ->where('lecture_id', $this->id)
+            ->where('study_class_id', '<>', $excludedStudyClassId)
             ->where('sequence', $sequence)
             ->first();
         if ($check) {

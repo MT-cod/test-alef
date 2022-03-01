@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
             for ($sequence = 1; $sequence < 7; $sequence++) {
                 foreach (Lecture::all() as $lecture) {
                     if (!$class->isLectureAlreadyInCurrentStudyClass($lecture->id)
-                        && !$lecture->isLectureAlreadyInCurrentSequence($sequence)) {
+                        && !$lecture->isLectureAlreadyHasCurrentSequence($sequence)) {
                         $class->lectures()->attach($lecture->id, ['sequence' => $sequence]);
                         break;
                     }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 class StudyClass extends Model
@@ -13,9 +14,9 @@ class StudyClass extends Model
 
     protected $fillable = ['name', 'updated_at'];
 
-    public function students(): BelongsToMany
+    public function students(): hasMany
     {
-        return $this->belongsToMany(Student::class, 'students', 'study_class_id', 'id');
+        return $this->hasMany(Student::class, 'study_class_id', 'id');
     }
 
     public function lectures(): BelongsToMany
@@ -28,6 +29,22 @@ class StudyClass extends Model
         )->withPivot('sequence');
     }
 
+    public function getStudyClassData(): array
+    {
+        $data['name'] = $this->name;
+        $data['students'] = $this->students()->get();
+        return $data;
+    }
+
+    public function destroyWithoutStudents(): void
+    {
+        foreach ($this->students()->get() as $student) {
+            $student->update(['study_class_id' => 0]);
+        }
+        $this->lectures()->detach();
+        $this->delete();
+    }
+
     public function isLectureAlreadyInCurrentStudyClass(int $lecture_id): bool
     {
         $check = DB::table('study_classes_lectures')
@@ -38,5 +55,19 @@ class StudyClass extends Model
             return true;
         }
         return false;
+    }
+
+    public function getPlan(): array
+    {
+        $prep = $this->lectures()->orderBy('sequence')->get()->toArray();
+        return array_map(static fn ($lec) => ['sequence' => $lec['pivot']['sequence'], 'theme' => $lec['theme']], $prep);
+    }
+
+    public function setPlan($data): void
+    {
+        $this->lectures()->detach();
+        foreach ($data as $row) {
+            $this->lectures()->attach((integer) $row['id'], ['sequence' => (integer) $row['sequence']]);
+        }
     }
 }
