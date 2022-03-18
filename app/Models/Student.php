@@ -11,11 +11,11 @@ class Student extends Model
 
     protected $fillable = ['name', 'email', 'study_class_id', 'updated_at'];
 
-    public function getStudentData()
+    public function getStudentData(): array
     {
         $data['name'] = $this->name;
         $data['email'] = $this->email;
-        $data['lectures'] = StudyClass::findOrFail($this->study_class_id)->lectures()->get();
+        $data['lectures'] = ($this->study_class_id) ? StudyClass::find($this->study_class_id)->lectures()->get() : [];
         return $data;
     }
 }
