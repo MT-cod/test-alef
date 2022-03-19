@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\DB;
 
 class Lecture extends Model
 {
@@ -33,14 +33,10 @@ class Lecture extends Model
 
     public function isLectureAlreadyHasCurrentSequence(int $sequence, int $excludedStudyClassId = 0): bool
     {
-        $check = DB::table('study_classes_lectures')
-            ->where('lecture_id', $this->id)
-            ->where('study_class_id', '<>', $excludedStudyClassId)
-            ->where('sequence', $sequence)
-            ->first();
-        if ($check) {
-            return true;
-        }
-        return false;
+        return (bool) $this->whereHas('studyClasses', function (Builder $query) use ($sequence,$excludedStudyClassId){
+            $query->where('lecture_id', $this->id);
+            $query->where('study_class_id', '<>', $excludedStudyClassId);
+            $query->where('sequence', $sequence);
+        })->get('id')->toArray();
     }
 }
