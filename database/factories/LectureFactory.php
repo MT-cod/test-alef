@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Lecture>
+ * @extends Factory
  */
 class LectureFactory extends Factory
 {
@@ -16,7 +16,7 @@ class LectureFactory extends Factory
      * @return array<string, mixed>
      * @throws Exception
      */
-    public function definition()
+    public function definition(): array
     {
         return [
             'theme' => 'Тема: ' . $this->faker->words(3, true),

@@ -11,7 +11,7 @@ class StoreLectureRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'theme' => ['required', 'string', 'unique:lectures'],

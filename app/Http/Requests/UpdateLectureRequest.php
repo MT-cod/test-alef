@@ -12,7 +12,7 @@ class UpdateLectureRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'theme' => ['required', 'string', Rule::unique('lectures')->ignore(request()->lecture)],

@@ -12,7 +12,7 @@ class UpdateStudyClassRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'name' => ['string', Rule::unique('study_classes')->ignore(request()->study_class)]

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Lecture;
 use App\Models\Student;
 use App\Models\StudyClass;
+use Exception;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,9 +15,9 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
-    public function run()
+    public function run(): void
     {
         Student::factory(100)->create();
         StudyClass::factory(10)->create();

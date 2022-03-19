@@ -60,7 +60,7 @@ class StudyClass extends Model
         return array_map(static fn ($lec) => ['sequence' => $lec['pivot']['sequence'], 'theme' => $lec['theme']], $prep);
     }
 
-    public function setPlan($data): void
+    public function setPlan(array $data): void
     {
         $this->lectures()->detach();
         foreach ($data as $row) {

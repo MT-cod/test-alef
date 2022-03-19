@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Lecture;
 use Illuminate\Foundation\Http\FormRequest;
+use JetBrains\PhpStorm\ArrayShape;
 
 class StorUpdPlanForStudyClassRequest extends FormRequest
 {
@@ -12,7 +13,7 @@ class StorUpdPlanForStudyClassRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             '*' => [
