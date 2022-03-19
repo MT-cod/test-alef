@@ -38,10 +38,7 @@ class StudyClass extends Model
 
     public function destroyWithoutStudents(): void
     {
-        foreach ($this->students()->get() as $student) {
-            $student->update(['study_class_id' => 0]);
-        }
-        $this->lectures()->detach();
+        $this->students()->update(['study_class_id' => 0]);
         $this->delete();
     }
 

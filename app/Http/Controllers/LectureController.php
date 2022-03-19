@@ -73,7 +73,6 @@ class LectureController extends Controller
     public function destroy(Lecture $lecture): JsonResponse
     {
         try {
-            $lecture->studyClasses()->detach();
             $lecture->delete();
             return Response::json(['success' => 'Лекция успешно удалена.']);
         } catch (\Throwable $e) {

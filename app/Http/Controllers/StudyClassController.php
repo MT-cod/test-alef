@@ -82,7 +82,7 @@ class StudyClassController extends Controller
     }
 
     /**
-     * получить учебный план (список лекций) для конкретного класса.
+     * Получить учебный план (список лекций) для конкретного класса.
      *
      * @param StudyClass $studyClass
      * @return JsonResponse
@@ -93,7 +93,7 @@ class StudyClassController extends Controller
     }
 
     /**
-     * создать/обновить учебный план (очередность и состав лекций) для конкретного класса.
+     * Создать/обновить учебный план (очередность и состав лекций) для конкретного класса.
      * (ожидается передача массива с номерами очерёдности [sequence] и id лекций для учебного класса).
      *
      * @param StorUpdPlanForStudyClassRequest $request
