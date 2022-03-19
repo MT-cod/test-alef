@@ -16,26 +16,7 @@ class StorUpdPlanForStudyClassRequest extends FormRequest
     public function rules(): array
     {
         return [
-            '*' => [
-                function ($attr, $val, $fail): void {
-                    if (Lecture::findOrFail($val['id'])->isLectureAlreadyHasCurrentSequence(
-                        $val['sequence'],
-                        request()->study_class->id
-                    )) {
-                        $fail('Лекция уже имеет такую позицию в учебном плане.');
-                    }
-
-                    $checkDub = 0;
-                    foreach (request()->toArray() as $row) {
-                        if ($row['id'] === $val['id']) {
-                            $checkDub ++;
-                            if ($checkDub > 1) {
-                                $fail('В переданном учебном плане имеются дубликаты лекций.');
-                            }
-                        }
-                    }
-                }
-            ]
+            'plan.*' => ['array:sequence']
         ];
     }
 

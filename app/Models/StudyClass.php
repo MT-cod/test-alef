@@ -60,11 +60,19 @@ class StudyClass extends Model
         return array_map(static fn ($lec) => ['sequence' => $lec['pivot']['sequence'], 'theme' => $lec['theme']], $prep);
     }
 
-    public function setPlan(array $data): void
+    public function setPlan(array $data): array
     {
-        $this->lectures()->detach();
-        foreach ($data as $row) {
-            $this->lectures()->attach((integer) $row['id'], ['sequence' => (integer) $row['sequence']]);
+        try {
+            foreach ($data as $lecId => $seq) {
+                if (Lecture::findOrFail($lecId)->isLectureAlreadyHasCurrentSequence($seq['sequence'], $this->id)) {
+                    return [['errors' => 'Лекция уже имеет такую позицию в учебном плане.'], 400];
+                }
+            }
+            $this->lectures()->sync($data);
+            return [['success' => 'Учебный план успешно утверждён.'], 200];
+        } catch (\Throwable $a) {
+            return [['errors' => 'Не удалось утвердить учебный план.'], 400];
         }
+
     }
 }

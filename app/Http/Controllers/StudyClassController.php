@@ -94,7 +94,7 @@ class StudyClassController extends Controller
 
     /**
      * Создать/обновить учебный план (очередность и состав лекций) для конкретного класса.
-     * (ожидается передача массива с номерами очерёдности [sequence] и id лекций для учебного класса).
+     * (ожидается массив типа: plan[id лекции => порядковый номер лекции в плане]).
      *
      * @param StorUpdPlanForStudyClassRequest $request
      * @param StudyClass $studyClass
@@ -102,11 +102,7 @@ class StudyClassController extends Controller
      */
     public function setPlan(StorUpdPlanForStudyClassRequest $request, StudyClass $studyClass): JsonResponse
     {
-        try {
-            $studyClass->setPlan($request->validated());
-            return Response::json(['success' => 'Учебный план успешно утверждён.']);
-        } catch (\Throwable $e) {
-            return Response::json(['errors' => 'Не удалось утвердить учебный план.'], 400);
-        }
+        [$result, $status] = $studyClass->setPlan($request->validated('plan'));
+        return Response::json($result, $status);
     }
 }
