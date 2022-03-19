@@ -8,7 +8,7 @@ use App\Models\Lecture;
 use Illuminate\Http\JsonResponse;
 use \Illuminate\Support\Facades\Response;
 
-class LecturesController extends Controller
+class LectureController extends Controller
 {
     /**
      * Display a listing of the resource.

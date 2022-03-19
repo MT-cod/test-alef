@@ -9,7 +9,7 @@ use App\Models\StudyClass;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 
-class StudyClassesController extends Controller
+class StudyClassController extends Controller
 {
     /**
      * Display a listing of the resource.

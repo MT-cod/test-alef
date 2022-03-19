@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\LecturesController;
-use App\Http\Controllers\StudentsController;
-use App\Http\Controllers\StudyClassesController;
+use App\Http\Controllers\LectureController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StudyClassController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,20 +23,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::resource(
     'students',
-    StudentsController::class,
+    StudentController::class,
     ['only' => ['index', 'show', 'store', 'update', 'destroy']]
 );
 
 Route::resource(
     'study_classes',
-    StudyClassesController::class,
+    StudyClassController::class,
     ['only' => ['index', 'show', 'store', 'update', 'destroy']]
 );
-Route::get('study_classes/plan/{study_class}', [StudyClassesController::class, 'getPlan']);
-Route::post('study_classes/plan/{study_class}', [StudyClassesController::class, 'setPlan']);
+Route::get('study_classes/plan/{study_class}', [StudyClassController::class, 'getPlan']);
+Route::post('study_classes/plan/{study_class}', [StudyClassController::class, 'setPlan']);
 
 Route::resource(
     'lectures',
-    LecturesController::class,
+    LectureController::class,
     ['only' => ['index', 'show', 'store', 'update', 'destroy']]
 );
