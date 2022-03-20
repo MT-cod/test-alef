@@ -5,11 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreLectureRequest;
 use App\Http\Requests\UpdateLectureRequest;
 use App\Models\Lecture;
+use App\Services\LectureService;
 use Illuminate\Http\JsonResponse;
 use \Illuminate\Support\Facades\Response;
 
 class LectureController extends Controller
 {
+    protected LectureService $service;
+
+    public function __construct(LectureService $service)
+    {
+        $this->service = $service;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -28,12 +36,8 @@ class LectureController extends Controller
      */
     public function store(StoreLectureRequest $request): JsonResponse
     {
-        try {
-            Lecture::create($request->validated());
-            return Response::json(['success' => 'Лекция успешно создана.']);
-        } catch (\Throwable $e) {
-            return Response::json(['errors' => 'Не удалось создать лекцию.'], 400);
-        }
+        [$result, $status] = $this->service->store($request->validated());
+        return Response::json($result, $status);
     }
 
     /**
@@ -56,12 +60,8 @@ class LectureController extends Controller
      */
     public function update(UpdateLectureRequest $request, Lecture $lecture): JsonResponse
     {
-        try {
-            $lecture->update($request->validated());
-            return Response::json(['success' => 'Лекция успешно обновлена.']);
-        } catch (\Throwable $e) {
-            return Response::json(['errors' => 'Не удалось обновить лекцию.'], 400);
-        }
+        [$result, $status] = $this->service->update($request->validated(), $lecture);
+        return Response::json($result, $status);
     }
 
     /**
@@ -72,11 +72,7 @@ class LectureController extends Controller
      */
     public function destroy(Lecture $lecture): JsonResponse
     {
-        try {
-            $lecture->delete();
-            return Response::json(['success' => 'Лекция успешно удалена.']);
-        } catch (\Throwable $e) {
-            return Response::json(['errors' => 'Не удалось удалить лекцию.'], 400);
-        }
+        [$result, $status] = $this->service->destroy($lecture);
+        return Response::json($result, $status);
     }
 }

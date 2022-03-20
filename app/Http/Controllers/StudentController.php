@@ -5,11 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
+use App\Services\StudentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 
 class StudentController extends Controller
 {
+    protected StudentService $service;
+
+    public function __construct(StudentService $service)
+    {
+        $this->service = $service;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -28,12 +36,8 @@ class StudentController extends Controller
      */
     public function store(StoreStudentRequest $request): JsonResponse
     {
-        try {
-            Student::create($request->validated());
-            return Response::json(['success' => 'Студент успешно создан.']);
-        } catch (\Throwable $e) {
-            return Response::json(['errors' => 'Не удалось создать студента.'], 400);
-        }
+        [$result, $status] = $this->service->store($request->validated());
+        return Response::json($result, $status);
     }
 
     /**
@@ -56,12 +60,8 @@ class StudentController extends Controller
      */
     public function update(UpdateStudentRequest $request, Student $student): JsonResponse
     {
-        try {
-            $student->update($request->validated());
-            return Response::json(['success' => 'Студент успешно обновлён.']);
-        } catch (\Throwable $e) {
-            return Response::json(['errors' => 'Не удалось обновить студента.'], 400);
-        }
+        [$result, $status] = $this->service->update($request->validated(), $student);
+        return Response::json($result, $status);
     }
 
     /**
@@ -72,11 +72,7 @@ class StudentController extends Controller
      */
     public function destroy(Student $student): JsonResponse
     {
-        try {
-            $student->delete();
-            return Response::json(['success' => 'Студент успешно удалён.']);
-        } catch (\Throwable $e) {
-            return Response::json(['errors' => 'Не удалось удалить студента.'], 400);
-        }
+        [$result, $status] = $this->service->destroy($student);
+        return Response::json($result, $status);
     }
 }

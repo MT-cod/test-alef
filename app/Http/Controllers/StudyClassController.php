@@ -6,11 +6,19 @@ use App\Http\Requests\StoreStudyClassRequest;
 use App\Http\Requests\StorUpdPlanForStudyClassRequest;
 use App\Http\Requests\UpdateStudyClassRequest;
 use App\Models\StudyClass;
+use App\Services\StudyClassService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 
 class StudyClassController extends Controller
 {
+    protected StudyClassService $service;
+
+    public function __construct(StudyClassService $service)
+    {
+        $this->service = $service;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -29,12 +37,8 @@ class StudyClassController extends Controller
      */
     public function store(StoreStudyClassRequest $request): JsonResponse
     {
-        try {
-            StudyClass::create($request->validated());
-            return Response::json(['success' => 'Класс успешно создан.']);
-        } catch (\Throwable $e) {
-            return Response::json(['errors' => 'Не удалось создать класс.'], 400);
-        }
+        [$result, $status] = $this->service->store($request->validated());
+        return Response::json($result, $status);
     }
 
     /**
@@ -57,12 +61,8 @@ class StudyClassController extends Controller
      */
     public function update(UpdateStudyClassRequest $request, StudyClass $studyClass): JsonResponse
     {
-        try {
-            $studyClass->update($request->validated());
-            return Response::json(['success' => 'Класс успешно обновлён.']);
-        } catch (\Throwable $e) {
-            return Response::json(['errors' => 'Не удалось обновить класс.'], 400);
-        }
+        [$result, $status] = $this->service->update($request->validated(), $studyClass);
+        return Response::json($result, $status);
     }
 
     /**
@@ -73,12 +73,8 @@ class StudyClassController extends Controller
      */
     public function destroy(StudyClass $studyClass): JsonResponse
     {
-        try {
-            $studyClass->destroyWithoutStudents();
-            return Response::json(['success' => 'Класс успешно удалён.']);
-        } catch (\Throwable $e) {
-            return Response::json(['errors' => 'Не удалось удалить класс.'], 400);
-        }
+        [$result, $status] = $this->service->destroy($studyClass);
+        return Response::json($result, $status);
     }
 
     /**
@@ -89,7 +85,7 @@ class StudyClassController extends Controller
      */
     public function getPlan(StudyClass $studyClass): JsonResponse
     {
-        return Response::json($studyClass->getPlan());
+        return Response::json($this->service->getPlan($studyClass));
     }
 
     /**
@@ -102,7 +98,7 @@ class StudyClassController extends Controller
      */
     public function setPlan(StorUpdPlanForStudyClassRequest $request, StudyClass $studyClass): JsonResponse
     {
-        [$result, $status] = $studyClass->setPlan($request->validated('plan'));
+        [$result, $status] = $this->service->setPlan($studyClass, $request->validated('plan'));
         return Response::json($result, $status);
     }
 }

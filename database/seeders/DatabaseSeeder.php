@@ -5,12 +5,20 @@ namespace Database\Seeders;
 use App\Models\Lecture;
 use App\Models\Student;
 use App\Models\StudyClass;
+use App\Services\StudyClassService;
 use Exception;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
+    protected StudyClassService $stClassService;
+
+    public function __construct(StudyClassService $service)
+    {
+        $this->stClassService = $service;
+    }
+
     /**
      * Seed the application's database.
      *
@@ -27,13 +35,21 @@ class DatabaseSeeder extends Seeder
         foreach (StudyClass::all() as $class) {
             for ($sequence = 1; $sequence < 7; $sequence++) {
                 foreach (Lecture::all() as $lecture) {
-                    if (!$class->isLectureAlreadyInCurrentStudyClass($lecture->id)
-                        && !$lecture->isLectureAlreadyHasCurrentSequence($sequence)) {
+                    if (!$this->isLectureAlreadyInStudyClass($lecture, $class->id)
+                        && !$this->stClassService->isLectureAlreadyHasCurrentSequence($lecture->id, $sequence, $class->id)) {
                         $class->lectures()->attach($lecture->id, ['sequence' => $sequence]);
                         break;
                     }
                 }
             }
         }
+    }
+
+    public function isLectureAlreadyInStudyClass(Lecture $lecture, int $classId): bool
+    {
+        return (bool) $lecture->whereHas('studyClasses', function (Builder $query) use ($lecture, $classId) {
+                $query->where('study_class_id', $classId);
+                $query->where('lecture_id', $lecture->id);
+            })->get('id')->toArray();
     }
 }

@@ -30,13 +30,4 @@ class Lecture extends Model
         $data['studyClasses'] = $this->studyClasses()->with('students')->get()->toArray();
         return $data;
     }
-
-    public function isLectureAlreadyHasCurrentSequence(int $sequence, int $excludedStudyClassId = 0): bool
-    {
-        return (bool) $this->whereHas('studyClasses', function (Builder $query) use ($sequence,$excludedStudyClassId){
-            $query->where('lecture_id', $this->id);
-            $query->where('study_class_id', '<>', $excludedStudyClassId);
-            $query->where('sequence', $sequence);
-        })->get('id')->toArray();
-    }
 }
