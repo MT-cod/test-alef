@@ -40,3 +40,5 @@ Route::resource(
     LectureController::class,
     ['only' => ['index', 'show', 'store', 'update', 'destroy']]
 );
+
+Route::get('test', [App\Http\Controllers\Controller::class, 'test']);
